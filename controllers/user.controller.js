@@ -1,6 +1,18 @@
+const User = require('../schemas/user.schema');
+
 function getUser(req, res) {
     return res.status(200).send({
         message: 'Traer usuario'
+    })
+};
+
+function getUsers(req, res) {
+    User.find({}, (error, users) => {
+        console.log('users', users)
+        return res.status(200).send({
+            message: 'Usuarios obtenidos correctamente',
+            users
+        })
     })
 };
 
@@ -30,8 +42,9 @@ function login(req, res) {
 
 module.exports = {
     getUser,
+    getUsers,
     createUser,
     editUser,
     deleteUser,
-    login
+    login,
 }
