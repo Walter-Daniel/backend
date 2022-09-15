@@ -1,15 +1,9 @@
 const mongoose = require('mongoose');
 const express = require('express');
-const app = express();
+const app = require('./app')
 const port = 3400;
-const password = 'purpl3sun';
+const password = require('./config/config').dbPassword;
 const URL = `mongodb+srv://walter-daniel:${password}@cluster0.g08hg.mongodb.net/?retryWrites=true&w=majority`;
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-});
-
-
 
 (async function connectDB() {
     try {
