@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Walter-Daniel/database.git"
+  },
+  "author": "Walter Daniel Carrizo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Walter-Daniel/database/issues"
+  },
+  "homepage": "https://github.com/Walter-Daniel/database#readme",
+  "dependencies": {
+    "mongoose": "^6.6.1"
+  }
+}
