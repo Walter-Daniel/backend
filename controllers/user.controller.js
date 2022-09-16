@@ -35,7 +35,7 @@ async function createUser(req, res) {
         const newUser = await user.save();
         newUser.password = undefined;
         return res.status(200).send({
-            message: 'usuario creado',
+            message: 'Usuario creado',
             newUser
         })
     } catch (error) {
