@@ -16,8 +16,33 @@ async function getUser(req, res) {
     });
 };
 
-function getUsers(req, res) {
-    User.find({}, (error, users) => {
+async function getUsers(req, res) {
+
+    let searchParams = {};
+
+    const name = req.params.name;
+
+    if( name ) {
+        searchParams = { fullName: new RegExp( name, 'i' )}
+    }
+
+    try {
+        const users = await User.find(searchParams).select({ password: 0, __v: 0 });
+
+        if(users.length === 0){
+            return res.status(404).send({
+                ok: true,
+                message: 'No se encontró ningun usuario'
+            })
+        }
+
+        return res.status(200).send({
+            ok: true,
+            message: 'Usuarios obtenidos correctamente',
+            users
+        })
+
+    } catch (error) {
         if(error) {
             return res.status(500).send({
                 ok: false,
@@ -25,18 +50,8 @@ function getUsers(req, res) {
                 error
             })
         }
-        if(users.length === 0){
-            return res.status(404).send({
-                ok: true,
-                message: 'No se encontró ningun usuario'
-            })
-        }
-        return res.status(200).send({
-            ok: true,
-            message: 'Usuarios obtenidos correctamente',
-            users
-        })
-    })
+    }
+
 };
 
 async function createUser(req, res) {
@@ -88,9 +103,32 @@ async function deleteUser(req, res) {
     })
 };
 
-function login(req, res) {
+async function login(req, res) {
+
+    const reqEmail = req.body.email;
+    const reqPassword = req.body.password;
+
+    const user = await User.findOne({ email: reqEmail });
+
+    if( !user ){
+        return res.status(404).send({
+            message: 'No se encontro ningun usuario con ese correo'
+        })
+    }
+
+    const checkPassword = await bcrypt.compare( reqPassword, user.password );
+
+    if( !checkPassword ){
+        return res.status(400).send({
+            message: 'Credenciales incorrecta'
+        })
+    }
+
+    user.password = undefined;
+
     return res.status(200).send({
-        message: 'Usuario logueado'
+        message: 'Usuario logueado',
+        user
     })
 };
 
