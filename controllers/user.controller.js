@@ -1,9 +1,19 @@
 const User = require('../schemas/user.schema');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
-function getUser(req, res) {
+async function getUser(req, res) {
+
+    const id = req.params.userID;
+    const user = await User.findById(id);
+    if(!user) return res.status(200).send({
+        ok: false,
+        message: `No se encontró ningun usuario con el id: ${id}`
+    });
     return res.status(200).send({
-        message: 'Traer usuario'
-    })
+        message: 'Traer usuario',
+        user
+    });
 };
 
 function getUsers(req, res) {
@@ -32,8 +42,20 @@ function getUsers(req, res) {
 async function createUser(req, res) {
     try {
         let user = new User(req.body);
+        let password = req.body.password;
+
+        const encryptedPassword = await bcrypt.hash( password, saltRounds) 
+            if( !encryptedPassword ) {
+                return res.status(500).send({
+                    ok: false,
+                    message: 'Error al guardar usuario'
+                })
+            
+            };
+            
+        user.password = encryptedPassword;
         const newUser = await user.save();
-        newUser.password = undefined;
+
         return res.status(200).send({
             message: 'Usuario creado',
             newUser
@@ -47,23 +69,30 @@ async function createUser(req, res) {
     }   
 };
 
-function editUser(req, res) {
+async function editUser(req, res) {
+
+    const id = req.query.id;
+    const newUser = await User.findByIdAndUpdate(id, req.body, { new: true })
     return res.status(200).send({
-        message: 'usuario editado'
+        message: 'Usuario editado',
+        newUser
     })
 };
 
-function deleteUser(req, res) {
+async function deleteUser(req, res) {
+    const id = req.params.id;
+    const deletedUser = await User.findByIdAndDelete(id);
     return res.status(200).send({
-        message: 'usuario borrado'
+        message: 'Usuario borrado',
+        deletedUser
     })
-}
+};
 
 function login(req, res) {
     return res.status(200).send({
-        message: 'usuario logueado'
+        message: 'Usuario logueado'
     })
-}
+};
 
 module.exports = {
     getUser,
