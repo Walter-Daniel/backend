@@ -32,6 +32,8 @@ async function getUsers(req, res) {
         const [ users, total ] = await Promise.all([
             User.find(searchParams).select({ password: 0, __v: 0 })
                                     .skip( page * itemPerPage )
+                                    .collation({ locale: 'es' })
+                                    // .sort({ fullName: -1 }) ordenar de menor a mayor
                                     .limit(itemPerPage),
             User.find(searchParams).countDocuments()
         ]);
