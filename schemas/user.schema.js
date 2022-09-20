@@ -9,24 +9,24 @@ const VALID_ROLES = [
 const UserSchema = new Schema({
     fullName: { 
         type: String, 
-        require: true, 
+        required: true, 
         minlength: 5, 
         maxlength: 40 
     },
     email: { 
         type: String, 
-        require: true,
+        required: true,
         unique: true,
         uniqueCaseInsensitive: true,
         index: true, 
     },
     password: { 
         type: String, 
-        require: true
+        required: true
     },
     active: {
         type: Boolean,
-        require: true,
+        required: true,
         default: false
     },
     role: {
