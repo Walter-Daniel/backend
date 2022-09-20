@@ -19,15 +19,22 @@ async function getUser(req, res) {
 async function getUsers(req, res) {
 
     let searchParams = {};
-
+    
     const name = req.params.name;
-
+    const page = req.query.page || 0;
+    const itemPerPage = req.query.item || 10;
+    
     if( name ) {
         searchParams = { fullName: new RegExp( name, 'i' )}
     }
 
     try {
-        const users = await User.find(searchParams).select({ password: 0, __v: 0 });
+        const [ users, total ] = await Promise.all([
+            User.find(searchParams).select({ password: 0, __v: 0 })
+                                    .skip( page * itemPerPage )
+                                    .limit(itemPerPage),
+            User.find(searchParams).countDocuments()
+        ]);
 
         if(users.length === 0){
             return res.status(404).send({
@@ -39,7 +46,8 @@ async function getUsers(req, res) {
         return res.status(200).send({
             ok: true,
             message: 'Usuarios obtenidos correctamente',
-            users
+            users,
+            total
         })
 
     } catch (error) {
