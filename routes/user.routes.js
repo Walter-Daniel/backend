@@ -1,10 +1,11 @@
 const express = require('express');
 const api = express.Router();
-const userController = require('../controllers/user.controller')
+const userController = require('../controllers/user.controller');
+const jwtVerify = require('../middlewares/jwt');
 
-api.get('/user/:userID', userController.getUser);
+api.get('/user/:userID', jwtVerify, userController.getUser);
 
-api.get('/users/:name?', userController.getUsers);
+api.get('/users/:name?', jwtVerify, userController.getUsers);
 
 api.post('/users', userController.createUser);
 
