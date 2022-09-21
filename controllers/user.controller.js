@@ -132,9 +132,15 @@ async function login(req, res) {
     
         if( !user ){
             return res.status(404).send({
-                message: 'No se encontro ningun usuario con ese correo'
+                message: 'No se encontró ningún usuario con ese correo'
             })
         };
+
+        if(!user.active) {
+            return res.status(400).send({
+                message: 'Usuario dado de baja, comuniquese con un administrador'
+            })
+        }
     
         const checkPassword = await bcrypt.compare( reqPassword, user.password );
     
@@ -145,11 +151,9 @@ async function login(req, res) {
         };
     
         user.password = undefined;
-    
-        const token = await jwt.sign( user.toJSON(), secretSeed );
-        console.log(token)
-    
-    
+
+        const token = await jwt.sign( user.toJSON(), secretSeed, { expiresIn: '8h' } );
+        
         return res.status(200).send({
             message: 'Usuario logueado',
             user,
