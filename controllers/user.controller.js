@@ -1,4 +1,6 @@
 const User = require('../schemas/user.schema');
+const jwt = require('jsonwebtoken');
+const secretSeed = require('../config/config').secretSeed;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -32,6 +34,8 @@ async function getUsers(req, res) {
         const [ users, total ] = await Promise.all([
             User.find(searchParams).select({ password: 0, __v: 0 })
                                     .skip( page * itemPerPage )
+                                    .collation({ locale: 'es' })
+                                    // .sort({ fullName: -1 }) ordenar de menor a mayor
                                     .limit(itemPerPage),
             User.find(searchParams).countDocuments()
         ]);
@@ -95,6 +99,13 @@ async function createUser(req, res) {
 async function editUser(req, res) {
 
     const id = req.query.id;
+    if(req.user._id !== id && req.user.role !== 'ADMIN_ROLE') {
+        return res.status(401).send({
+            ok: false,
+            message: 'No tienes permisos para modificar este usuario'
+        })
+    }
+
     const newUser = await User.findByIdAndUpdate(id, req.body, { new: true })
     return res.status(200).send({
         message: 'Usuario editado',
@@ -113,31 +124,47 @@ async function deleteUser(req, res) {
 
 async function login(req, res) {
 
-    const reqEmail = req.body.email;
-    const reqPassword = req.body.password;
+    try {
+        const reqEmail = req.body.email;
+        const reqPassword = req.body.password;
+    
+        const user = await User.findOne({ email: reqEmail });
+    
+        if( !user ){
+            return res.status(404).send({
+                message: 'No se encontró ningún usuario con ese correo'
+            })
+        };
 
-    const user = await User.findOne({ email: reqEmail });
+        if(!user.active) {
+            return res.status(400).send({
+                message: 'Usuario dado de baja, comuniquese con un administrador'
+            })
+        }
+    
+        const checkPassword = await bcrypt.compare( reqPassword, user.password );
+    
+        if( !checkPassword ){
+            return res.status(400).send({
+                message: 'Credenciales incorrecta'
+            })
+        };
+    
+        user.password = undefined;
 
-    if( !user ){
-        return res.status(404).send({
-            message: 'No se encontro ningun usuario con ese correo'
+        const token = await jwt.sign( user.toJSON(), secretSeed, { expiresIn: '8h' } );
+        
+        return res.status(200).send({
+            message: 'Usuario logueado',
+            user,
+            token
+        });
+    } catch (error) {
+        return res.status(500).send({
+            ok: false,
+            message: 'Error al intentar loguear usuario',
         })
-    }
-
-    const checkPassword = await bcrypt.compare( reqPassword, user.password );
-
-    if( !checkPassword ){
-        return res.status(400).send({
-            message: 'Credenciales incorrecta'
-        })
-    }
-
-    user.password = undefined;
-
-    return res.status(200).send({
-        message: 'Usuario logueado',
-        user
-    })
+    } 
 };
 
 module.exports = {
