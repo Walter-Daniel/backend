@@ -153,7 +153,7 @@ async function login(req, res) {
 
         if(!user.active) {
             return res.status(400).send({
-                message: 'El estado del usuario se encuntra inactivo'
+                message: 'El usuario se encuentra inactivo'
             })
         }
 

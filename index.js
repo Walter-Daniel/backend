@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const app = require('./app')
-const port = 3400;
+const port = process.env.PORT || 3400;
 const password = require('./config/config').dbPassword;
 const URL = `mongodb+srv://walter-daniel:${password}@cluster0.g08hg.mongodb.net/?retryWrites=true&w=majority`;
 
