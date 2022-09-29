@@ -99,11 +99,16 @@ async function createUser(req, res) {
 async function editUser(req, res) {
 
     const id = req.query.id;
+
     if(req.user._id !== id && req.user.role !== 'ADMIN_ROLE') {
         return res.status(401).send({
             ok: false,
             message: 'No tienes permisos para modificar este usuario'
         })
+    }
+
+    if(req.body.password) {
+        req.body.password = await bcrypt.hash( req.body.password, saltRounds) 
     }
 
     const newUser = await User.findByIdAndUpdate(id, req.body, { new: true })
@@ -136,12 +141,6 @@ async function login(req, res) {
             })
         };
 
-        if(!user.active) {
-            return res.status(400).send({
-                message: 'Usuario dado de baja, comuniquese con un administrador'
-            })
-        }
-    
         const checkPassword = await bcrypt.compare( reqPassword, user.password );
     
         if( !checkPassword ){
@@ -151,6 +150,12 @@ async function login(req, res) {
         };
     
         user.password = undefined;
+
+        if(!user.active) {
+            return res.status(400).send({
+                message: 'El usuario se encuentra inactivo'
+            })
+        }
 
         const token = await jwt.sign( user.toJSON(), secretSeed, { expiresIn: '8h' } );
         
