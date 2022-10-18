@@ -11,6 +11,11 @@ const OrderSchema = new Schema({
             totalPrice: {type: Number}
         },
     ],
+    active: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     user: { type: String, ref: 'User', required: true},
     createdAt: { type: Date, default: Date.now, required: true }
 });

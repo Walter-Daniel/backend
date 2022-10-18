@@ -5,18 +5,32 @@ const Schema = mongoose.Schema;
 const CategorySchema = new Schema({
     name: {
         type: String,
-        required: [true, 'Debe ingresar un nombre para la categoria.'],
-        minlength: [2, 'El nombre de la categoria debe tener al menos 2 caracteres.'],
-        maxlength: [20, 'El nombre de la categoria no debe superar los 20 caracteres.'],
-        match: [/^[a-zA-Z ]*$/, 'El nombre de la categoria solo puede contener letras.'],
+        required: [true, 'La descripción es necesaria.'],
+        minlength: [2, 'El nombre de la categoría debe tener al menos 2 caracteres.'],
+        maxlength: [20, 'El nombre de la categoría no debe superar los 20 caracteres.'],
+        match: [/^[a-zA-Z ]*$/, 'Sólo puede contener letras.'],
+        unique: true
       },
     active: {
     type: Boolean,
     required: true,
     default: false,
     },
-    products: { type: String, ref: 'Product', required: true},
-    createdAt: { type: Date, default: Date.now, required: true }
+    products: { 
+                type: String, 
+                ref: 'Product', 
+                required: true
+    },
+    createdAt: { 
+                type: Date,
+                default: Date.now, 
+                required: true 
+    },
+    usuario: {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+    }
+    
 });
 
-module.exports = mongoose.model('Order', CategorySchema)
+module.exports = mongoose.model('Category', CategorySchema)
