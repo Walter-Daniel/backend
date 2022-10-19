@@ -12,23 +12,23 @@ const CategorySchema = new Schema({
         unique: true
       },
     active: {
-    type: Boolean,
-    required: true,
-    default: false,
+        type: Boolean,
+        required: true,
+        default: false,
     },
     products: { 
-                type: String, 
-                ref: 'Product', 
-                required: true
+        type: String, 
+        ref: 'Product', 
+        required: true
     },
     createdAt: { 
-                type: Date,
-                default: Date.now, 
-                required: true 
+        type: Date,
+        default: Date.now, 
+        required: true 
     },
     usuario: {
-                type: Schema.Types.ObjectId,
-                ref: 'User'
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
     
 });
