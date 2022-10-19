@@ -2,7 +2,6 @@ const Product = require('../schemas/product.schema');
 
 const getProducts = async(req, res) => {
     try {
-        console.log(req.query)
         let searchCriteria = req.query || {};
         
         Object.keys(searchCriteria).forEach(key => {
