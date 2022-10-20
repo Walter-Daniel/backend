@@ -19,14 +19,13 @@ const CategorySchema = new Schema({
     products: { 
         type: String, 
         ref: 'Product', 
-        required: true
     },
     createdAt: { 
         type: Date,
         default: Date.now, 
         required: true 
     },
-    usuario: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     }
