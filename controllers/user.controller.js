@@ -8,12 +8,12 @@ async function getUser(req, res) {
 
     const id = req.params.userID;
     const user = await User.findById(id);
-    if(!user) return res.status(200).send({
+    if(!user) return res.status(404).send({
         ok: false,
-        message: `No se encontró ningun usuario con el id: ${id}`
+        message: `No se encontró ningún usuario con el id: ${id}`
     });
     return res.status(200).send({
-        message: 'Traer usuario',
+        message: 'Usuario encontrado',
         user
     });
 };
@@ -33,10 +33,10 @@ async function getUsers(req, res) {
     try {
         const [ users, total ] = await Promise.all([
             User.find(searchParams).select({ password: 0, __v: 0 })
-                                    .skip( page * itemPerPage )
+                                    // .skip( page * itemPerPage )
                                     .collation({ locale: 'es' })
-                                    // .sort({ fullName: -1 }) ordenar de menor a mayor
-                                    .limit(itemPerPage),
+                                    .sort({ fullName: -1 }),
+                                    // .limit(itemPerPage),
             User.find(searchParams).countDocuments()
         ]);
 
