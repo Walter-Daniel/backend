@@ -1,22 +1,34 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
+const status = [
+    'Pending',
+    'Placed',
+    'Cancelled',
+];
 
 const OrderSchema = new Schema({
     products: [
         {
-            productId: {type: String, ref: 'Product'},
-            quantity: {type: Number},
-            price: {type: Number},
-            totalPrice: {type: Number}
+            productId: {type: String, ref: 'Product', required: true},
+            quantity: {type: Number, required: true},
+            totalPrice: {type: Number,  required: true}
         },
     ],
-    active: {
-        type: Boolean,
-        required: true,
-        default: false
+    user: { 
+        type: String, 
+        ref: 'User', 
+        required: true
     },
-    user: { type: String, ref: 'User', required: true},
+    total: {
+        type: Number,
+        required: true
+    },
+    status: {
+        type: String,
+        enum: status,
+        default: status[0],
+    },
     createdAt: { type: Date, default: Date.now, required: true }
 });
 
