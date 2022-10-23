@@ -12,7 +12,6 @@ const OrderSchema = new Schema({
         {
             productId: {type: String, ref: 'Product', required: true},
             quantity: {type: Number, required: true},
-            totalPrice: {type: Number,  required: true}
         },
     ],
     user: { 
