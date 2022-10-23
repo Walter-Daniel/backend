@@ -19,7 +19,11 @@ async function createOrder(req, res) {
 
 async function getOrders(req, res) {
     try {
-        const orders = await Order.find().populate('user', { password: 0 }).populate('products.productId', '_id name detail');
+        const orders = await Order.find()
+                                  .sort({ createdAt: -1 })
+                                  .populate('user', { password: 0 })
+                                  .populate('products.productId', '_id name detail')
+                                  .select({ __v: 0 });
         return res.status(200).send({
             ok: true,
             message: `Ordenes obtenidas correctamente`,

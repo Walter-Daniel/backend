@@ -33,7 +33,12 @@ const UserSchema = new Schema({
         type: String,
         enum: VALID_ROLES,
         default: VALID_ROLES[1]
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        required: true,
+    },
 });
 
 module.exports = mongoose.model('User', UserSchema)

@@ -32,7 +32,7 @@ async function getUsers(req, res) {
         const [ users, total ] = await Promise.all([
             User.find(searchParams).select({ password: 0, __v: 0 })
                                     .collation({ locale: 'es' })
-                                    .sort({ fullName: -1 }),
+                                    .sort({ createdAt: -1 }),
             User.find(searchParams).countDocuments()
         ]);
 
