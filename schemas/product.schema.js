@@ -31,6 +31,11 @@ const ProductSchema = new Schema({
         required: true,
         default: false,
     },
+    promo: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     createdAt: {
         type: Date,
         required: true,
