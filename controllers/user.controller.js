@@ -23,8 +23,6 @@ async function getUsers(req, res) {
     let searchParams = {};
     
     const name = req.params.name;
-    const page = req.query.page || 0;
-    const itemPerPage = req.query.item || 10;
     
     if( name ) {
         searchParams = { fullName: new RegExp( name, 'i' )}
@@ -33,10 +31,8 @@ async function getUsers(req, res) {
     try {
         const [ users, total ] = await Promise.all([
             User.find(searchParams).select({ password: 0, __v: 0 })
-                                    // .skip( page * itemPerPage )
                                     .collation({ locale: 'es' })
                                     .sort({ fullName: -1 }),
-                                    // .limit(itemPerPage),
             User.find(searchParams).countDocuments()
         ]);
 
@@ -98,7 +94,7 @@ async function getUsers(req, res) {
 
 async function editUser(req, res) {
 
-    const id = req.query.id;
+    const id = req.params.id;
 
     if(req.user._id !== id && req.user.role !== 'ADMIN_ROLE') {
         return res.status(401).send({
@@ -113,18 +109,29 @@ async function editUser(req, res) {
 
     const newUser = await User.findByIdAndUpdate(id, req.body, { new: true })
     return res.status(200).send({
+        ok: true,
         message: 'Usuario editado',
         newUser
     })
 };
 
 async function deleteUser(req, res) {
-    const id = req.params.id;
-    const deletedUser = await User.findByIdAndDelete(id);
-    return res.status(200).send({
+    try {
+        const id = req.params.id;
+        const deletedUser = await User.findByIdAndDelete(id);
+        
+        return res.status(200).send({
+        ok: true,
         message: 'Usuario borrado',
         deletedUser
     })
+    } catch (error) {
+        return res.status(500).send({
+            ok: false,
+            message: 'No se pudo eliminar el usuario.',
+            error
+        })
+    }
 };
 
 // async function login(req, res) {
