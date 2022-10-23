@@ -6,8 +6,8 @@ const CategorySchema = new Schema({
     name: {
         type: String,
         required: [true, 'La descripción es necesaria.'],
-        minlength: [2, 'El nombre de la categoría debe tener al menos 2 caracteres.'],
-        maxlength: [20, 'El nombre de la categoría no debe superar los 20 caracteres.'],
+        minlength: [2, 'El nombre de la categoría debe tener al menos 2 carácteres.'],
+        maxlength: [20, 'El nombre de la categoría no debe superar los 20 carácteres.'],
         match: [/^[a-zA-Z ]*$/, 'Sólo puede contener letras.'],
         unique: true
       },
