@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const today = new Date();
+const now = today.toLocaleTimeString('es-AR');
+
 const ProductSchema = new Schema({
     name: { 
         type: String, 
@@ -38,8 +41,8 @@ const ProductSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        required: true,
         default: Date.now,
+        required: true,
     },
 });
 
