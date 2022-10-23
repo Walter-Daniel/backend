@@ -1,4 +1,4 @@
- const Product = require('../schemas/product.schema');
+const Product = require('../schemas/product.schema');
 
 const getProduct = async(req, res) => {
     const id = req.params.id;

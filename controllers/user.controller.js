@@ -96,13 +96,6 @@ async function editUser(req, res) {
 
     const id = req.params.id;
 
-    if(req.user._id !== id && req.user.role !== 'ADMIN_ROLE') {
-        return res.status(401).send({
-            ok: false,
-            message: 'No tienes permisos para modificar este usuario'
-        })
-    }
-
     if(req.body.password) {
         req.body.password = await bcrypt.hash( req.body.password, saltRounds) 
     }
