@@ -8,7 +8,7 @@ api.get('/user/:userID', jwtVerify, userController.getUser);
 
 api.get('/users/:name?', jwtVerify, userController.getUsers);
 
-api.put('/users', [jwtVerify], userController.editUser);
+api.put('/users/:id', [jwtVerify], userController.editUser);
 
 api.delete('/users/:id', [jwtVerify, isAdmin], userController.deleteUser);
 
