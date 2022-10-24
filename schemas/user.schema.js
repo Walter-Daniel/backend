@@ -27,7 +27,7 @@ const UserSchema = new Schema({
     active: {
         type: Boolean,
         required: true,
-        default: false
+        default: true
     },
     role: {
         type: String,
@@ -38,6 +38,10 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now,
         required: true,
+    },
+    orders: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Order',
     },
 });
 
