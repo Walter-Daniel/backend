@@ -39,6 +39,10 @@ async function getOrders(req, res) {
 }
 
 async function updateOrders(req, res) {
+
+   try {
+    const id = req.params.id;
+
     if(req.user._id !== id && req.user.role !== 'ADMIN_ROLE') {
         return res.status(401).send({
             ok: false,
@@ -46,11 +50,19 @@ async function updateOrders(req, res) {
         })
     }
 
-    const newOrder = await User.findByIdAndUpdate(id, req.body, { new: true })
+    const newOrder = await Order.findByIdAndUpdate(id, req.body, { new: true })
     return res.status(200).send({
+        ok: true,
         message: 'Orden editada',
         newOrder
     });
+   } catch (error) {
+    return res.status(500).send({
+        ok: false,
+        message: 'Error al intentar editar la orden',
+        error
+    });
+   }
 };
 
 module.exports = {

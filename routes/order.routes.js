@@ -4,6 +4,6 @@ const orderController = require('../controllers/order.controller')
 
 api.get('/orders', [jwtVerify, isAdmin], orderController.getOrders)
 api.post('/orders', [jwtVerify, isAdmin], orderController.createOrder)
-api.put('/orders', [jwtVerify, isAdmin], orderController.updateOrders)
+api.put('/orders/:id', [jwtVerify, isAdmin], orderController.updateOrders)
 
 module.exports = api
