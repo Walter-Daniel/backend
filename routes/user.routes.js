@@ -6,7 +6,7 @@ const isAdmin = require('../middlewares/isAdmin');
 
 api.get('/user/:userID', jwtVerify, userController.getUser);
 
-api.get('/users/:name?', jwtVerify, userController.getUsers);
+api.get('/users', jwtVerify, userController.getUsers);
 
 api.put('/users/:id', [jwtVerify], userController.editUser);
 
