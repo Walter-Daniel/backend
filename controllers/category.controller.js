@@ -2,7 +2,7 @@ const Category = require('../schemas/category.schema')
 
 async function getCategory(req, res) {
     try {
-        const categories = await Category.find().populate('user', { password: 0 });
+        const categories = await Category.find().populate('user', '_id');
         return res.status(200).send({
             ok: true,
             message: `Categorías obtenidas correctamente`,

@@ -23,7 +23,7 @@ const getProducts = async(req, res) => {
         })
 
         const [ products, total ] = await Promise.all([
-            Product.find(searchCriteria).sort({ createdAt: -1 }).populate('category'),
+            Product.find(searchCriteria).sort({ createdAt: -1 }).populate('category', '_id name'),
             Product.find(searchCriteria).countDocuments()
         ])
 

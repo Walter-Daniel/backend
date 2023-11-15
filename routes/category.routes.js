@@ -1,17 +1,19 @@
 const express = require('express');
 const api = express.Router();
-const categoryController = require('../controllers/category.controller');
+const { createCategory, updateCategory, getCategory, deleteCategory } = require('../controllers/category.controller');
 const jwtVerify = require('../middlewares/jwt');
 const isAdmin = require('../middlewares/isAdmin');
 
 api.get('/category',[
     // jwtVerify
-], categoryController.getCategory)
+], getCategory)
 
-api.post('/category', [jwtVerify, isAdmin],categoryController.createCategory);
+api.post('/category', [
+    // jwtVerify, isAdmin
+], createCategory);
 
-api.put('/category/:id', [jwtVerify, isAdmin], categoryController.updateCategory);
+api.put('/category/:id', [jwtVerify, isAdmin], updateCategory);
 
-api.delete('/category/:id', [jwtVerify, isAdmin], categoryController.deleteCategory);
+api.delete('/category/:id', [jwtVerify, isAdmin], deleteCategory);
 
-module.exports = api
+module.exports = api;

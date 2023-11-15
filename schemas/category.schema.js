@@ -15,10 +15,6 @@ const CategorySchema = new Schema({
         required: true,
         default: false,
     },
-    products: { 
-        type: String, 
-        ref: 'Product', 
-    },
     createdAt: { 
         type: Date,
         default: Date.now, 
