@@ -85,6 +85,7 @@ async function updateOrders(req, res) {
 };
 
 module.exports = {
+    getOrder,
     createOrder,
     getOrders,
     updateOrders,

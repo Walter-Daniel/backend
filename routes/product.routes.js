@@ -10,11 +10,11 @@ const validate = require('../middlewares/fieldValidation');
 
 api.get('/products/:id', jwtVerify, productController.getProduct);
 api.get('/products', 
-// jwtVerify,
+jwtVerify,
  productController.getProducts);
 api.post('/products', [
-    // jwtVerify, 
-    // isAdmin,
+    jwtVerify, 
+    isAdmin,
     check('name').notEmpty().isString().isLength({min: 5, max:40}).withMessage('El nombre del producto debe tener entre 5 y 40 carácteres'),
     check('detail', 'La descripción es obligatoria. No debe superar los 250 caracteres.').notEmpty(),
     check('price').isNumeric().withMessage('Ingrese números').isInt({ min: 1, max: 10000 }).withMessage('El precio ingresado debe ser entre 1 y 10.000'),
