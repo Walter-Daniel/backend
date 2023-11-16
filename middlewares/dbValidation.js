@@ -5,21 +5,21 @@ const Product = require('../schemas/product.schema');
 const existCategory = async(id) => {
     const iscategory = await Category.findById(id);
     if(!iscategory){
-        throw new Error('No existe la categoría en la base de datos')
+        throw new Error('No existe la categoría en la base de datos.')
     }
 };
 
 const existUser = async(id) => {
     const isUser = await User.findById(id);
     if(!isUser){
-        throw new Error('No existe el usuario en la base de datos')
+        throw new Error('No existe el usuario en la base de datos.')
     }
 };
 
 const existProduct = async(id) => {
     const isProduct = await Product.findById(id);
     if(!isProduct){
-        throw new Error('No existe el producto en la base de datos')
+        throw new Error('No existe el producto en la base de datos.')
     }
 };
 
@@ -30,7 +30,7 @@ const hasARole = (req, res, next) => {
         if( !role || role !== 'ADMIN_ROLE' && role !== 'USER_ROLE'  ) {
             return res.status(401).send({
                 ok: false,
-                message: 'No tienes permiso para realizar la acción'
+                message: 'No tienes permiso para realizar la acción.'
             })
         };
         next();
@@ -43,9 +43,17 @@ const hasARole = (req, res, next) => {
 
 };
 
+const existEmail = async(email) => {
+    const userEmail = await User.findOne({email: email})
+    if(userEmail) {
+        throw new Error('El email ya se encuentra registrado en la base de datos.')
+    }
+};
+
 
 module.exports = {
     existCategory,
+    existEmail,
     existProduct,
     existUser,
     hasARole

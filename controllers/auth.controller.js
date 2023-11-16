@@ -4,36 +4,6 @@ const secretSeed = process.env.secretSeed;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-async function register(req, res) {
-    try {
-        let user = new User(req.body);
-        let password = req.body.password;
-
-        const encryptedPassword = await bcrypt.hash( password, saltRounds) 
-            if( !encryptedPassword ) {
-                return res.status(500).send({
-                    ok: false,
-                    message: 'Error al guardar usuario'
-                })
-            
-            };
-            
-        user.password = encryptedPassword;
-        const newUser = await user.save();
-
-        return res.status(200).send({
-            message: 'Usuario creado',
-            newUser
-        })
-    } catch (error) {
-        return res.send({
-            ok: false,
-            message: 'Error al crear un nuevo usuario',
-            error
-        })
-    }   
-};
-
 async function login(req, res) {
 
     try {
@@ -80,6 +50,5 @@ async function login(req, res) {
 };
 
 module.exports = {
-    register,
     login
 }

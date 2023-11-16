@@ -12,8 +12,8 @@ const validate = require('../middlewares/fieldValidation');
 api.get('/order/:id', jwtVerify, getOrder)
 api.get('/orders', [jwtVerify, isAdmin], getOrders)
 api.post('/orders', [
-    // jwtVerify,
-    // hasARole,
+    jwtVerify,
+    hasARole,
     check('products.*.productId').isMongoId().withMessage('Id no válido'),
     check('products.*.productId').custom(existProduct).withMessage('El producto no se encuentra registrado en la base de datos'),
     check('products.*.quantity').isInt({min:1, max:15}).withMessage('Ingresar un número entero entre 1 y 15.'),
