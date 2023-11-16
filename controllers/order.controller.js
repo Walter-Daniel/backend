@@ -2,13 +2,9 @@ const Order = require('../schemas/orders.schema');
 
 async function createOrder(req, res) {
     try {
-        const { user } = req.body;
-       
         let order = new Order(req.body);
         const newOrder = await order.save();
         
-        // user.orders = user.orders.concat(newOrder._id)
-        // await user.save()
         return res.status(200).send({
             ok: true,
             message: 'Orden creada correctamente',
@@ -72,14 +68,14 @@ async function updateOrders(req, res) {
     const newOrder = await Order.findByIdAndUpdate(id, req.body, { new: true })
     return res.status(200).send({
         ok: true,
-        message: 'Orden editada',
+        message: 'Orden modificada',
         newOrder
     });
    } catch (error) {
     return res.status(500).send({
         ok: false,
-        message: 'Error al intentar editar la orden',
-        error
+        message: 'Error al intentar modificar la orden',
+        error: error.message
     });
    }
 };
