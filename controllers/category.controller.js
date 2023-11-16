@@ -2,7 +2,7 @@ const Category = require('../schemas/category.schema')
 
 async function getCategory(req, res) {
     try {
-        const categories = await Category.find().populate('user', '_id');
+        const categories = await Category.find({active: true}).populate('user', '_id');
         return res.status(200).send({
             ok: true,
             message: `Categorías obtenidas correctamente`,
@@ -68,7 +68,7 @@ async function updateCategory(req, res){
 async function deleteCategory(req, res){
     try {
         const id = req.params.id;
-        const deleteCategory = await Category.findByIdAndDelete(id);
+        const deleteCategory = await Category.findByIdAndUpdate({_id: id}, {active: false});
         return res.status(200).send({
             message: 'Categoría eliminada',
             deleteCategory
@@ -76,7 +76,7 @@ async function deleteCategory(req, res){
     } catch (error) {
         res.status(500).send({
             ok: false,
-            message: 'Error al intentar borrar la categoría',
+            message: 'Error al intentar eliminar la categoría',
             error
         })
     }
