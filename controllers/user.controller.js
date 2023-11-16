@@ -1,6 +1,4 @@
 const User = require('../schemas/user.schema');
-const jwt = require('jsonwebtoken');
-const secretSeed = process.env.secretSeed;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
