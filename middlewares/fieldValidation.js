@@ -7,7 +7,6 @@ const validate = (req, res, next) => {
         next()
     } else {
         const extractedErrors = errors.array().map(err => {
-            console.log(err);
             return {
                 [err.param]: err.msg
             }
@@ -17,6 +16,6 @@ const validate = (req, res, next) => {
             errors: extractedErrors
         })
         }
-    }
+};
 
 module.exports = validate
