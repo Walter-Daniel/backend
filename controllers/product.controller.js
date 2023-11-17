@@ -22,14 +22,16 @@ const getProducts = async(req, res) => {
             searchCriteria[key] = new RegExp(req.query[key], 'i');
         })
 
-        const [ products, total ] = await Promise.all([
+        const [ products, allProducts, total ] = await Promise.all([
+            Product.find({ active: true }).sort({ createdAt: -1 }).populate('category', '_id name'),
             Product.find(searchCriteria).sort({ createdAt: -1 }).populate('category', '_id name'),
-            Product.find(searchCriteria).countDocuments()
+            Product.find().countDocuments()
         ])
 
         return res.status(200).send({
             message: 'Productos obtenidos correctamente',
             products,
+            allProducts,
             total
         })
         
@@ -73,7 +75,7 @@ const updateProducts = async(req,res) => {
 const deleteProducts = async(req, res) => {
     try {
         const id = req.params.id;
-        const deleteProduct = await Product.findByIdAndDelete(id);
+        const deleteProduct = await Product.findByIdAndUpdate({_id: id}, {active: false});
         return res.status(200).send({
             ok: true,
             message: 'Producto eliminado exitosamente',
