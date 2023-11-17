@@ -109,11 +109,11 @@ async function editUser(req, res) {
 async function deleteUser(req, res) {
     try {
         const id = req.params.id;
-        const deletedUser = await User.findByIdAndDelete(id);
+        const deletedUser = await User.findByIdAndUpdate({_id: id}, {active: false});
         
         return res.status(200).send({
         ok: true,
-        message: 'Usuario borrado',
+        message: 'Usuario eliminado',
         deletedUser
     })
     } catch (error) {
