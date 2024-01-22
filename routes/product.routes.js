@@ -10,7 +10,7 @@ const validate = require('../middlewares/fieldValidation');
 
 api.get('/products/:id', jwtVerify, productController.getProduct);
 api.get('/products', 
-jwtVerify,
+// jwtVerify,
  productController.getProducts);
 api.post('/products', [
     jwtVerify, 
