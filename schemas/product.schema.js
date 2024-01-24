@@ -34,6 +34,7 @@ const ProductSchema = new Schema({
         required: true,
         default: false,
     },
+    image: { type: String },
     promo: {
         type: Boolean,
         required: true,
