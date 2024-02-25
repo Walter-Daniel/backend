@@ -50,11 +50,27 @@ const existEmail = async(email) => {
     }
 };
 
+const imageValidation = (value) => {
+
+    if (!value) {
+      throw new Error('Debe seleccionar una imagen.');
+    }
+  
+    const allowedExtensions = ['.jpg', '.jpeg', '.avif', '.png'];
+    const extension = value.split('.').pop().toLowerCase();
+    if (!allowedExtensions.includes(`.${extension}`)) {
+      throw new Error('La imagen debe tener una extensión .jpg, .jpeg, .avif o .png.');
+    }
+  
+    return true;
+};
+
 
 module.exports = {
     existCategory,
     existEmail,
     existProduct,
     existUser,
-    hasARole
+    hasARole,
+    imageValidation
 };
