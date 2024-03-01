@@ -2,6 +2,7 @@ const User = require('../schemas/user.schema');
 const jwt = require('jsonwebtoken');
 const secretSeed = process.env.secretSeed;
 const bcrypt = require('bcrypt');
+const { generateJWT } = require('../helpers/generateJWT');
 
 async function login(req, res) {
 
@@ -31,14 +32,13 @@ async function login(req, res) {
             })
         }
 
-        const token = await jwt.sign( user.toJSON(), secretSeed, { expiresIn: '8h' } );
-
         const userLogin = {
             "_id": user._id,
             "fullName": user.fullName,
             "email": user.email,
             "role": user.role
         };
+        const token = await generateJWT(userLogin);
         
         return res.status(200).send({
             message: 'Inicio de sesión exitoso.',
@@ -46,13 +46,35 @@ async function login(req, res) {
             token
         });
     } catch (error) {
+        console.log(error)
         return res.status(500).send({
             ok: false,
             message: 'Error al intentar loguear usuario',
+            errorMessage: error
         })
     } 
 };
 
+const tokenRevalidated = async(req, res) => {
+
+    const { _id, fullName, email, role } = req.user;
+    const user = {
+        _id, 
+        fullName,
+        email,
+        role
+    }
+    const token = await generateJWT(user);
+
+    res.json({
+        ok: true,
+        message: 'Se revalidó el token',
+        user,
+        token
+    })
+};
+
 module.exports = {
-    login
+    login,
+    tokenRevalidated
 }

@@ -1,19 +1,29 @@
 const jwt = require('jsonwebtoken');
+
 const secretSeed  = process.env.secretSeed;
 
 const jwtVerify = ( req, res, next ) => {
 
-    const token = req.headers.authorization;
+    const token = req.header('x-token');
+    if(!token){
+        return res.status(401).json({
+            ok: false,
+            message: 'No hay token en la petición'
+        })
+    }
 
-    jwt.verify(token, secretSeed, (err, decoded) => {
-        if(err) {
-            return res.status(401).send({
-                message: 'Token inválido'
-            })
-        }
-        req.user = decoded
-        next();
-    })
+    try {
+        const { _id, fullName, email, role } = jwt.verify(token, secretSeed)
+        req.user = {_id, fullName, email, role}
+        
+    } catch (error) {
+        return res.status(401).json({
+            ok: false,
+            msg: 'Token no válido' 
+        })
+    }
+
+    next();
 
 };
 
