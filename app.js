@@ -9,6 +9,7 @@ const order_routes = require('./routes/order.routes');
 const auth_routes = require('./routes/auth.routes');
 const category_routes = require('./routes/category.routes');
 const images_routes = require('./routes/image.routes');
+const dashboard_routes = require('./routes/dashboard.routes');
 
 app.use(cors());
 app.use(express.json());
@@ -29,7 +30,8 @@ app.use( '/api', [
     order_routes,
     category_routes,
     auth_routes,
-    images_routes
+    images_routes,
+    dashboard_routes
 ]);
 
 app.use( '/api/auth', auth_routes );
