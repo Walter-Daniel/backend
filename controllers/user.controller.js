@@ -76,10 +76,15 @@ async function createUser(req, res) {
             
         user.password = encryptedPassword;
         const newUser = await user.save();
+        const {fullName, email} = newUser;
 
         return res.status(200).send({
-            message: 'Usuario creado',
-            newUser
+            ok: true,
+            message: 'Usuario registrado',
+            newUser: {
+                fullName,
+                email
+            }
         })
     } catch (error) {
         return res.send({

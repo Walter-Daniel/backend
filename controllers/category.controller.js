@@ -2,7 +2,7 @@ const Category = require('../schemas/category.schema')
 
 async function getCategory(req, res) {
     try {
-        const categories = await Category.find({active: true}).populate('user', '_id');
+        const categories = await Category.find({active: true}).select({ __v: 0 }).populate('user', '_id');
         return res.status(200).send({
             ok: true,
             message: `Categorías obtenidas correctamente`,

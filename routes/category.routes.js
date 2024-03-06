@@ -9,12 +9,12 @@ const isAdmin = require('../middlewares/isAdmin');
 const { createCategory, updateCategory, getCategory, deleteCategory } = require('../controllers/category.controller');
 const { existUser } = require('../middlewares/dbValidation');
 
-api.get('/category',[
-    jwtVerify,
-    isAdmin,
+api.get('/categories',[
+    // jwtVerify,
+    // isAdmin,
 ], getCategory)
 
-api.post('/category', [
+api.post('/categories', [
     jwtVerify, 
     isAdmin,
     check('name')
@@ -26,8 +26,8 @@ api.post('/category', [
     validate
 ], createCategory);
 
-api.put('/category/:id', [jwtVerify, isAdmin], updateCategory);
+api.put('/categories/:id', [jwtVerify, isAdmin], updateCategory);
 
-api.delete('/category/:id', [jwtVerify, isAdmin], deleteCategory);
+api.delete('/categories/:id', [jwtVerify, isAdmin], deleteCategory);
 
 module.exports = api;
