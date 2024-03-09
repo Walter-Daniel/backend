@@ -34,8 +34,10 @@ async function dashboardData(req, res){
         return res.status(200).json({
             ok:true,
             message: 'Información obtenida',
-            total,
-            lastAdded
+            data:{
+                total,
+                lastAdded
+            }
         })
 
        

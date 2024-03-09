@@ -32,7 +32,7 @@ const ProductSchema = new Schema({
     active: {
         type: Boolean,
         required: true,
-        default: false,
+        default: true,
     },
     image: { type: String },
     promo: {
