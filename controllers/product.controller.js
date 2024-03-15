@@ -15,29 +15,60 @@ const getProduct = async(req, res) => {
 };
 
 const getProducts = async(req, res) => {
-    let categoryID = req.query.categoryID;
-    let products;
+
+    let category = req.query.category;
+    let filter = category ? { category } : {};
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    
     try {
         
-        // Object.keys(searchCriteria).forEach(key => {
-        //     searchCriteria[key] = new RegExp(req.query[key], 'i');
-        // })
+        const [products, totalProducts] = await Promise.all([
+            Product.find(filter)
+            .sort({ createdAt: -1 }) 
+            .populate('category', '_id name')
+            .skip((page - 1) * pageSize)
+            .limit(pageSize),
+            Product.countDocuments(filter)
+        ]);
 
-        // const [ products, allProducts, total ] = await Promise.all([
-        //     Product.find({ active: true }).sort({ createdAt: -1 }).populate('category', '_id name'),
-        //     Product.find({category: categoryID}).sort({ createdAt: -1 }),
-        //     Product.find().countDocuments()
-        // ])
-
-        if (categoryID) {
-            products = await Product.find({ 'category': categoryID }).sort({ createdAt: -1 }).populate('category', '_id name');
-        } else {
-            products = await Product.find().sort({ createdAt: -1 }).populate('category', '_id name');
-        }
-
+        const totalPages = Math.ceil(totalProducts / pageSize);
+        
         return res.status(200).json({
             message: 'Productos obtenidos correctamente',
-            products
+            products,
+            totalProducts,
+            totalPages
+        })
+        
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+};
+
+const getPromos= async(req, res) => {
+
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    
+    try {
+        
+        const [ promoProducts, totalPromoProducts] = await Promise.all([
+            Product.find({ promo: true })
+            .sort({ createdAt: -1 }) 
+            .populate('category', '_id name')
+            .skip((page - 1) * pageSize)
+            .limit(pageSize),
+            Product.countDocuments({ promo: true })
+        ]);
+
+        const totalPages = Math.ceil(totalPromoProducts / pageSize);
+        
+        return res.status(200).json({
+            message: 'Promociones obtenidos correctamente',
+            promoProducts,
+            totalPromoProducts,
+            totalPages
         })
         
     } catch (error) {
@@ -47,7 +78,20 @@ const getProducts = async(req, res) => {
 
 const createProducts = async(req, res) => {
    try {
-    const uploadProduct = new Product(req.body)
+
+    const infoToUpload = req.body
+
+    if(infoToUpload.promo){
+        const promoCount = await Product.find({ 'promo': true, 'category._id': infoToUpload.category._id });
+        if(promoCount.length >= 3){
+            return res.status(409).json({
+                ok: false,
+                message: 'No puede haber más de 3 promos por categoría',
+            })        
+        }
+    }   
+
+    const uploadProduct = new Product(req.body);
     const product = await uploadProduct.save();
     
     return res.status(200).json({
@@ -117,5 +161,6 @@ module.exports = {
     getProducts,
     createProducts,
     updateProducts,
-    deleteProducts
+    deleteProducts,
+    getPromos
 }

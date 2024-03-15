@@ -12,6 +12,9 @@ api.get('/products/:id', jwtVerify, productController.getProduct);
 api.get('/products', 
 // jwtVerify,
  productController.getProducts);
+api.get('/promos', 
+// jwtVerify,
+ productController.getPromos);
 api.post('/products', [
     jwtVerify, 
     isAdmin,
